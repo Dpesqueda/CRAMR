@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type ="text/css" href="cramr.css">
+    <h1><center>CRAMR<center></h1>
+    <center><img src="http://www.globeuniversity.edu/blogs/wp-content/uploads/2012/07/write.jpg" alt="Mountain View" style="width:304px;height:228px"></center>
+    <style>
+        center{background-color:red}
+    </style>
+    <meta charset="UTF-8" />
+
+    <!-- Include Moxtra JavaScript Library -->
+    <script type="text/javascript" src="https://www.moxtra.com/api/js/moxtra-latest.js" id="moxtrajs" data-client-id="k5ImdKXzbTA"></script>
+
+    <!-- Include External JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
+    <script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"></script>
+    <script src="//www.parsecdn.com/js/parse-1.3.0.min.js"></script>
+
+
+    <!-- Create Signature -->
+    <script type="text/javascript">// <![CDATA[
+    var client_id = "k5ImdKXzbTA";
+    var client_secret = "n_XDaBRh8W0";
+    var timestamp = new Date().getTime();
+    var unique_id = "demo_user"; //Unique ID of how user is identified in your system
+
+    var hash = CryptoJS.HmacSHA256(client_id + unique_id + timestamp, client_secret);
+    var hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
+    var signature = hashInBase64.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
+    // ]]>
+    </script>
+
+    <!-- Initialize user and get access token -->
+    <script type="text/javascript">
+        var binId;
+        Parse.initialize("dsKE3Ib5yyYUnMTx74rAGo2n0nthx6F1wJxeSpUo", "cS4lTgXSEyUxesPXakKaF0amW35MG5GaakCMHE4E");
+        function get_token() {
+            var init_options = {
+                uniqueid: unique_id,
+                firstname: "Kirito",
+                lastname: "",
+                timestamp: timestamp,
+                signature: signature,
+                get_accesstoken: function(result) {
+                    console.log("access_token: " + result.access_token + " expires in: " + result.expires_in);
+                    start_chat(result.access_token);
+                },
+                error: function(result) {
+                    console.log("error code: " + result.error_code + " message: " + result.error_message);
+                }
+            };
+
+            Moxtra.setup(init_options);
+
+        }
+    </script>
+
+    <!-- Start Chat Function -->
+    <script type="text/javascript">
+        function start_chat (access_token) {
+            var chat_options = {
+                //unique id of the users who will be part of the chat. These users should already exist in Moxtra.
+                binder_id: binId,
+                iframe: true,
+                tagid4iframe: "chat_container",
+                iframewidth: "1150px",
+                iframeheight: "700px",
+                access_token: access_token,
+                autostart_meet: true,
+                autostart_note: true,
+                extension: { "show_dialogs": { "member_invite": true } },
+                start_chat: function(event) {
+                    console.log("Chat started binder ID: " + event.binder_id);
+                    //Your application server can upload files to draw using the binder_id and access_token
+                },
+                start_meet: function(event) {
+                    console.log("Meet started session key: " + event.session_key + " session id: " + event.session_id);
+                },
+                end_meet: function(event) {
+                    console.log("Meet end event");
+                },
+                invite_member: function(event) {
+                    console.log("Invite member into binder Id: " + event.binder_id);
+                },
+                request_note: function(event) {
+                    console.log("Note start request");
+                },
+                error: function(event) {
+                    console.log("Chat error code: " + event.error_code + " error message: " + event.error_message);
+                }
+            };
+            Moxtra.chat(chat_options);
+        }
+        function setBinId(x){
+            binId = x;
+            get_token();
+        }
+
+        function deleteBin(){
+            $("#chat_container").empty();
+        }
+    </script>
+
+
+</head>
+<body>
+<table class="theButton">
+    <tr>
+        <td><a type="button" class="myButton1" onmousedown="deleteBin()" onmouseup="setBinId('BsB30cs3MEuFaLW5fTwBcaI')" title="CST-338 Software Design">CST-338</a></td>
+    </tr>
+    <tr>
+        <td><a type="button" class="myButton1" onmousedown="deleteBin()" onmouseup="setBinId('BAH6vSAiDt2FBIpxBXfv0W0')"  title="CSS-41 Operating Systems">CSS-41</a></td>
+    </tr>
+    <tr>
+        <td><a type="button" class="myButton1" onmousedown="deleteBin()" onmouseup="setBinId('BSWzhal9oDQGwkfb3a6teqC')" title="CSS-3 Computer Architecture & Assembly Lang.">CSS-3</a></td>
+    </tr>
+    <tr>
+
+        <td><a type="button" class="myButton1" onmousedown="deleteBin()" onmouseup="setBinId('B68lTsWuqTY93i2MSXGQxBE')" title="ENG-1B Literature">ENG-1B</a></td>
+    </tr>
+    <tr>
+        <td><a type="button" class="myButton1" onmousedown="deleteBin()" onmouseup="setBinId('BMKqLCRCHYw2BhqsMUkCuI2')" title="POL-1 Intro to Political Science">POL-1</a></td>
+    </tr>
+    <tr>
+        <td><a type="button" class="myButton2">+</a>
+            <a type="button" class="myButton3">-</a></td>
+    </tr>
+
+</table>
+
+<table class="theScript">
+    <tr>
+        <td><td><script> setBinId("BMKqLCRCHYw2BhqsMUkCuI2");</script>
+        <div align="left" id="chat_container"></div>
+    </td></td>
+    </tr>
+</table>
+</body>
+</html>
